@@ -74,6 +74,10 @@ HRESULT WINAPI Hooked_Present(LPDIRECT3DDEVICE9 Device, CONST RECT* pSrcRect, CO
 						ImGui::Checkbox("Move to mouse demostration", &g_move_to_mouse);
 						ImGui::Checkbox("W2S/Line demostration", &g_w2s_line);
 						ImGui::Checkbox("Text champ info demostration", &g_champ_info);
+						ImGui::Checkbox("-->Tower Range demostration", &g_tower_range);
+						ImGui::Checkbox("-->Lasthit-Helper demostration", &g_lasthit_helper);
+						ImGui::Checkbox("-->Gank Alert demostration", &g_gank_alert);
+
 					}
 					ImGui::EndChild();
 				}

@@ -33,6 +33,9 @@ bool g_2range_objmanager = false;
 bool g_champ_info = false;
 bool g_move_to_mouse = false;
 bool g_w2s_line = false;
+bool g_gank_alert = false;
+bool g_lasthit_helper = false;
+bool g_tower_range = false;
 
 bool g_interface = false;
 IDirect3DDevice9* myDevice;
@@ -79,7 +82,78 @@ HRESULT WINAPI Hooked_Present(LPDIRECT3DDEVICE9 Device, CONST RECT* pSrcRect, CO
 		}
 	}
 
+	
 	//Below are just examples, for ease of understanding, some are placed in a separate cycle. Do not repeat this. Do one cycle to get objects.
+	
+	//Simple circle around minions who will die from one AA
+	if (g_lasthit_helper == true)
+	{
+		CObject holzer;
+		auto obj = holzer.GetFirstObject();
+		while (obj)
+		{
+			if (obj->IsMinion() && obj->IsEnemyTo(me) && me->GetTotalAttackDamage() >= obj->GetHealth() && obj->GetHealth() > 1)
+			{
+			
+				
+					auto color = createRGB(255, 0, 255);
+					Functions.DrawCircle(&obj->GetPos(), 20 + obj->GetBoundingRadius(), &color, 0, 0.0f, 0, 0.5f);
+				
+				
+					
+				
+				
+				
+			}
+			obj = holzer.GetNextObject(obj);
+		}
+	}
+	
+	//very simple gankalert. to near enemys have no line drawn and very far also wont have a line. the others will
+	
+		if (g_gank_alert == true)
+	{
+
+		CObject holzer;
+		auto obj = holzer.GetFirstObject();
+		while (obj)
+		{
+				if (obj->IsHero() && obj->IsAlive() && obj->IsEnemyTo(me))
+				{
+						Vector obj_pos = obj->GetPos();
+						Vector objpos_w2s;
+						Vector me_pos = me->GetPos();
+						Vector mepos_w2s;
+						Functions.WorldToScreen(&me_pos, &mepos_w2s);
+						Functions.WorldToScreen(&obj_pos, &objpos_w2s);
+
+						if (obj->GetPos().DistTo(me->GetPos()) < 4500 && obj->GetPos().DistTo(me->GetPos()) > 1500)
+						{
+							render.draw_line(mepos_w2s.X, mepos_w2s.Y, objpos_w2s.X, objpos_w2s.Y, ImColor(15, 0, 40, 255), 5.0f);
+						}
+
+				}
+				
+				obj = holzer.GetNextObject(obj);
+		}
+
+	}
+// just show towerRange
+		if (g_tower_range == true)
+	{
+		CObject holzer;
+		auto obj = holzer.GetFirstObject();
+		while (obj)
+		{
+			if (obj->IsTurret() && obj->IsEnemyTo(me))
+			{
+				auto color = createRGB(255, 0, 0);
+				Functions.DrawCircle(&obj->GetPos(), 875, &color, 0, 0.0f, 0, 0.5f);
+			}
+			obj = holzer.GetNextObject(obj);
+		}
+	}
+
 
 	//Me Range
 	if (g_range == true) {
@@ -311,7 +385,7 @@ LRESULT WINAPI WndProc(HWND hwnd, UINT u_msg, WPARAM w_param, LPARAM l_param)
 	switch (u_msg)
 	{
 	case WM_KEYDOWN:
-		if (w_param == VK_END) /* твоя кнопка тут */
+		if (w_param == VK_END) /* ГІГўГ®Гї ГЄГ­Г®ГЇГЄГ  ГІГіГІ */
 			g_menu_opened = !g_menu_opened;
 		break;
 	default:
